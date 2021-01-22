@@ -7,9 +7,19 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 print("NoNamehook loaded...") --by Puchi--
 
-local version = "1.00"
-local github_link = http.Get("https://github.com/Puch1x/nonamehook")
-if version ~= string.gsub(github_link)
+local dont_update = false
+local version_number = "1.1.1"
+local updated = false
+local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
+
+if version_number ~= string.gsub(github_ver_num, "\n", "") and not dont_update then
+    updated = true
+    local github_file = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/nonamehook.lua?token=AOFTWATMLU3VI7GMWWXW3QLABMO5O")
+    local curren_file = file.Open(GetScriptName(), "w")
+    curren_file:Write(github_file)
+    curren_file:Close()
+end
+
 
 --refs and gui elements--
 local window = gui.Window("nonamehook.window", "NoNamehook", 150, 150, 310, 600)
