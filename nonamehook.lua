@@ -5,7 +5,6 @@ print("XXXXXXX XXXXXXX XXXXXXX")
 print("XX XXXX XX XXXX XX   XX")
 print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
-print("NoNamehook loaded...") --by Puchi--
 
 --updater test--
 
@@ -22,6 +21,7 @@ if version_number ~= string.gsub(github_ver_num, "\n", "") and not dont_update t
     curren_file:Close()
 end
 
+print("NoNamehook version " .. version_number .. " loaded.")
 
 --refs and gui elements--
 local window = gui.Window("nonamehook.window", "NoNamehook", 150, 150, 310, 600)
