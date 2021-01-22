@@ -6,9 +6,8 @@ print("XX XXXX XX XXXX XX   XX")
 print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
-
 local dont_update = false
-local version_number = "1.88"
+local version_number = "1.89"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -71,6 +70,8 @@ local foghdrcolor = gui.Slider(group, "nonamehook.foghdrcolor", "hdr color scale
 local engineradarcheck = gui.Checkbox(group, "nonamehook.engineradar", "engine radar", 0)
 local chatspammer = gui.Checkbox(group, "nonamehook.chatspammer", "chat spammer", 0)
 local chatspammerdelay = gui.Slider(group, "nonamehook.chatspammerdelay","delay", 1, 1, 5, 0.25)
+local chatspammercustom = gui.Checkbox(group, "nonamehook.chatspammercustom", "custom message", 0)
+local chatspammertextbox = gui.Editbox(group, "nonamehook.chatspammertextbox", "")
 local chatspammerselection = gui.Combobox(group, "nonamehook.chatspammerselection", "text", "hallal message", "Astolfo > all", "fuck niggers", "fuck the haters", "stfu")
 local ragdollcheck = gui.Checkbox(group, "nonamehook.ragdollmanipulation", "ragdoll manipulation", 0)
 local ragdollforce = gui.Slider(group, "nonamehook.ragdollforce", "force", 100, 0, 5000)
@@ -167,7 +168,14 @@ local function activecheck()
         engineradarcheck:SetInvisible(false)
         chatspammer:SetInvisible(false)
         chatspammerdelay:SetInvisible(false)
-        chatspammerselection:SetInvisible(false)
+        chatspammercustom:SetInvisible(false)
+        if chatspammercustom:GetValue() == true then
+            chatspammerselection:SetInvisible(true)
+            chatspammertextbox:SetInvisible(false)
+        else
+            chatspammerselection:SetInvisible(false)
+            chatspammertextbox:SetInvisible(true)
+        end
         invunlock:SetInvisible(false)
         ragdollcheck:SetInvisible(false)
         ragdollforce:SetInvisible(false)
@@ -175,7 +183,9 @@ local function activecheck()
     else
         engineradarcheck:SetInvisible(true)
         chatspammer:SetInvisible(true)
-        chatspammerdelay:SetInvisible(true)
+        chatspammerdelay:SetInvisible(true) 
+        chatspammercustom:SetInvisible(true)
+        chatspammertextbox:SetInvisible(true)
         chatspammerselection:SetInvisible(true)
         invunlock:SetInvisible(true)
         ragdollcheck:SetInvisible(true)
@@ -636,9 +646,14 @@ local function ragdollmanipulation()
     if ragdollcheck:GetValue() == true then
 
         if InGame == true then
-
-            client.SetConVar("phys_pushscale", ragdollforce:GetValue(), true)
-            client.SetConVar("cl_ragdoll_gravity", ragdollgravity:GetValue(), true)
+            
+            if ragdollforce:GetValue() ~= client.GetConVar("phys_pushscale") then
+                client.SetConVar("phys_pushscale", ragdollforce:GetValue(), true)
+            end
+            
+            if ragdollgravity:GetValue() ~= client.GetConVar("cl_ragdoll_gravity") then
+                client.SetConVar("cl_ragdoll_gravity", ragdollgravity:GetValue(), true)
+            end
 
         end
 
