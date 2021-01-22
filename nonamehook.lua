@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "1.89"
+local version_number = "2.00"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -617,16 +617,20 @@ local function chatspam()
                 lasttiming = globals.CurTime()
             end
 
-            if chatspammerselection:GetValue() == 0 then
-                message = "﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽"
-            elseif chatspammerselection:GetValue() == 1 then
-                message = "Astolfo > all"
-            elseif chatspammerselection:GetValue() == 2 then
-                message = "fuck niggers"
-            elseif chatspammerselection:GetValue() == 3 then
-                message = "fuck the haters"
-            elseif chatspammerselection:GetValue() == 4 then
-                message = "shut the fuck you stupid bitch ass nigger femboy dipshit asshole fucktard pedophile motherfucker crybaby noname newfagg kys"
+            if chatspammercustom:GetValue() == true then
+                message = chatspammertextbox:GetValue()
+            else
+                if chatspammerselection:GetValue() == 0 then
+                    message = "﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽ ﷽﷽﷽﷽"
+                elseif chatspammerselection:GetValue() == 1 then
+                    message = "Astolfo > all"
+                elseif chatspammerselection:GetValue() == 2 then
+                    message = "fuck niggers"
+                elseif chatspammerselection:GetValue() == 3 then
+                    message = "fuck the haters"
+                elseif chatspammerselection:GetValue() == 4 then
+                    message = "shut the fuck you stupid bitch ass nigger femboy dipshit asshole fucktard pedophile motherfucker crybaby noname newfagg kys"
+                end
             end
 
             if timing == true then
