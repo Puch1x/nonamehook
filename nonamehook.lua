@@ -7,8 +7,10 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 print("NoNamehook loaded...") --by Puchi--
 
+--updater test--
+
 local dont_update = false
-local version_number = "1.1.1"
+local version_number = "1.01"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
