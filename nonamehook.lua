@@ -9,7 +9,7 @@ print("XX   XX XX   XX XX   XX")
 --updater test--
 
 local dont_update = false
-local version_number = "1.01"
+local version_number = "1.88"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
