@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.00"
+local version_number = "2.10"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -23,7 +23,7 @@ print("NoNamehook version " .. version_number .. " loaded successfully.") --by P
 
 --refs and gui elements--
 local window = gui.Window("nonamehook.window", "NoNamehook", 150, 150, 310, 600)
-local group = gui.Groupbox(window, "version 1.0", 5, 10, 300, 235)
+local group = gui.Groupbox(window, "version " .. version_number, 5, 10, 300, 235)
 local category = gui.Combobox(group, "nonamehook.category", "category", "legit", "semirage", "rage", "viewmodel changer", "fog editor", "misc")
 
 
@@ -41,6 +41,8 @@ local legitindicatorscolor = gui.ColorPicker(group, "nonamehook.legitindicators.
     --semirage category--
 local semirage = gui.Checkbox(group, "nonamehook.semirage", "semirage", 0)
 local semiragecolor = gui.ColorPicker(group, "nonamehook.semiragecolor", "colors", 0, 170, 200, 255)
+local semirageaa = gui.Checkbox(group, "nonamehook.semirageaa", "legit aa", 0)
+local semirageaabutton = gui.Keybox(group, "nonamehook.semirageaakey", "direction switch key", nil)
 local semiragedmgoverride = gui.Checkbox(group, "nonamehook.semiragedmgoverride", "mindmg override on key", 0)
 local semiragedmgoverridekey = gui.Keybox(group, "nonamehook.semiragedmgoverridekey", "override key", 34)
 local semiragedmgoverridevalue = gui.Slider(group, "nonamehook.semirageoverridevalue", "override value", 20, 1, 100)
@@ -72,12 +74,13 @@ local chatspammer = gui.Checkbox(group, "nonamehook.chatspammer", "chat spammer"
 local chatspammerdelay = gui.Slider(group, "nonamehook.chatspammerdelay","delay", 1, 1, 5, 0.25)
 local chatspammercustom = gui.Checkbox(group, "nonamehook.chatspammercustom", "custom message", 0)
 local chatspammertextbox = gui.Editbox(group, "nonamehook.chatspammertextbox", "")
-local chatspammerselection = gui.Combobox(group, "nonamehook.chatspammerselection", "text", "hallal message", "Astolfo > all", "fuck niggers", "fuck the haters", "stfu")
+local chatspammerselection = gui.Combobox(group, "nonamehook.chatspammerselection", "text", "hallal message", "Astolfo > all", "fuck niggers", "fuck the haters", "stfu", "Aimware.net")
 local ragdollcheck = gui.Checkbox(group, "nonamehook.ragdollmanipulation", "ragdoll manipulation", 0)
 local ragdollforce = gui.Slider(group, "nonamehook.ragdollforce", "force", 100, 0, 5000)
 local ragdollgravity = gui.Slider(group, "nonamehook.ragdollgravity", "gravity", 600, -1000, 1000, 100)
 local invunlock = gui.Button(group, "Unlock Inventory", Inventoryunlock)
 
+--Check if Player is in-game for later use--
 local InGame
 local function isInGame()
 
@@ -120,12 +123,16 @@ local function activecheck()
         semiragedmgoverride:SetInvisible(false)
         semiragedmgoverridekey:SetInvisible(false)
         semiragedmgoverridevalue:SetInvisible(false)
+        semirageaa:SetInvisible(false)
+        semirageaabutton:SetInvisible(false)
     else
         semirage:SetInvisible(true)
         semiragecolor:SetInvisible(true)
         semiragedmgoverride:SetInvisible(true)
         semiragedmgoverridekey:SetInvisible(true)
         semiragedmgoverridevalue:SetInvisible(true)
+        semirageaa:SetInvisible(true)
+        semirageaabutton:SetInvisible(true)
     end
 
     if category:GetValue() == 3 then    --viewmodel changer
@@ -543,6 +550,42 @@ end
 callbacks.Register("Draw", weaponCheck)
 
 
+local side = "right"
+
+local function semiaa()
+
+    if InGame == true then
+
+        if semirageaa:GetValue() == true then
+            
+            if gui.GetValue("rbot.antiaim.base") ~= 0 or gui.GetValue("rbot.antiaim.advanced.pitch") ~= 0 or gui.GetValue("rbot.antiaim.advanced.autodir.edges") ~= false then
+                gui.SetValue("rbot.antiaim.base", 0)
+                gui.SetValue("rbot.antiaim.advanced.pitch", 0)
+                gui.SetValue("rbot.antiaim.advanced.autodir.edges", false)
+            end
+
+            if input.IsButtonPressed(semirageaabutton:GetValue()) then
+                aatoggled = not aatoggled
+            end
+
+            if aatoggled == true then
+                gui.SetValue("rbot.antiaim.base.lby", 58)
+                gui.SetValue("rbot.antiaim.base.rotation", -58)
+                side = "right"
+            else 
+                gui.SetValue("rbot.antiaim.base.lby", -58)
+                gui.SetValue("rbot.antiaim.base.rotation", 58)
+                side = "left"
+            end
+
+        end
+
+    end
+    
+end
+callbacks.Register("Draw", semiaa)
+
+
 local positionX
 local positionY
 
@@ -573,6 +616,7 @@ local function semirageindicators()
                 draw.TextShadow(positionX, positionY+50, "awall:")
                 draw.Color(semiragecolor:GetValue())
                 draw.TextShadow(positionX+60, positionY+50, lbotAWallStatus)
+                
             end
 
             if gui.GetValue("rbot.master") == true then
@@ -589,6 +633,14 @@ local function semirageindicators()
                 draw.TextShadow(positionX, positionY+50, "awall:")
                 draw.Color(semiragecolor:GetValue())
                 draw.TextShadow(positionX+60, positionY+50, rbotAWallStatus)
+
+                if semirageaa:GetValue() == true then
+                    draw.Color(255, 255, 255, 255)
+                    draw.TextShadow(positionX, positionY+65, "aa side:")
+                    draw.Color(semiragecolor:GetValue())
+                    draw.TextShadow(positionX+60, positionY+65, side)
+                end
+
             end
 
         end
@@ -630,6 +682,8 @@ local function chatspam()
                     message = "fuck the haters"
                 elseif chatspammerselection:GetValue() == 4 then
                     message = "shut the fuck you stupid bitch ass nigger femboy dipshit asshole fucktard pedophile motherfucker crybaby noname newfagg kys"
+                elseif chatspammerselection:GetValue() == 5 then
+                    message = "AIMWARE.net | Premium CS:GO Cheat"
                 end
             end
 
