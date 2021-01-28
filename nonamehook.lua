@@ -48,6 +48,11 @@ local semiragedmgoverridekey = gui.Keybox(group, "nonamehook.semiragedmgoverride
 local semiragedmgoverridevalue = gui.Slider(group, "nonamehook.semirageoverridevalue", "override value", 20, 1, 100)
 
 
+    --rage category--
+local experimental = gui.Checkbox(group, "nonamehook.exp", "experimental", 0)
+local expdelay = gui.Slider(group, "nonamehook.expdelay", "delay", 1, 0.25, 3, 0.25)
+
+
     --viewmodel changer--
 local viewmodelchangercheck = gui.Checkbox(group, "nonamehook.viewmodelchangerswitch", "viewmodel changer", 0)
 local viewmodelchangerfov = gui.Slider(group, "nonamehook.viewmodelchangerfov", "fov", 60, 40, 90)
@@ -133,6 +138,14 @@ local function activecheck()
         semiragedmgoverridevalue:SetInvisible(true)
         semirageaa:SetInvisible(true)
         semirageaabutton:SetInvisible(true)
+    end
+
+    if category:GetValue() == 2 then    --rage
+        experimental:SetInvisible(false)
+        expdelay:SetInvisible(false)
+    else
+        experimental:SetInvisible(true)
+        expdelay:SetInvisible(true)
     end
 
     if category:GetValue() == 3 then    --viewmodel changer
@@ -396,6 +409,35 @@ local function viewmodelchanger()
 
 end
 callbacks.Register("Draw", viewmodelchanger)
+
+
+
+local tick = false
+local lasttick = 0
+
+local function exp()
+
+    if experimental:GetValue() == true then
+
+        if InGame == true then
+
+            if globals.TickCount() >= (lasttick + (64*expdelay:GetValue())) then
+                tick = true
+                lasttick = globals.TickCount()
+            end
+
+            if tick == true then
+                gui.SetValue("rbot.antiaim.base.rotation", gui.GetValue("rbot.antiaim.base.rotation")*-1)
+                gui.SetValue("rbot.antiaim.base.lby", gui.GetValue("rbot.antiaim.base.lby")*-1)
+                tick = false
+            end
+
+        end
+        
+    end
+
+end
+callbacks.Register("Draw", exp)
 
 
 local function engineradar()
@@ -664,9 +706,9 @@ local function chatspam()
             
             local delay = chatspammerdelay:GetValue()
 
-            if globals.CurTime() >= (lasttiming+delay) then
+            if globals.TickCount() >= (lasttiming+(64*delay)) then
                 timing = true
-                lasttiming = globals.CurTime()
+                lasttiming = globals.TickCount()
             end
 
             if chatspammercustom:GetValue() == true then
