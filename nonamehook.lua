@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.12"
+local version_number = "2.13"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -50,7 +50,7 @@ local semiragedmgoverridevalue = gui.Slider(group, "nonamehook.semirageoverridev
 
     --rage category--
 local experimental = gui.Checkbox(group, "nonamehook.exp", "experimental", 0)
-local expdelay = gui.Slider(group, "nonamehook.expdelay", "delay", 1, 0.25, 3, 0.25)
+local expdelay = gui.Slider(group, "nonamehook.expdelay", "delay", 0.5, 0.25, 3, 0.25)
 
 
     --viewmodel changer--
@@ -424,6 +424,11 @@ local function exp()
             if globals.TickCount() >= (lasttick + (64*expdelay:GetValue())) then
                 tick = true
                 lasttick = globals.TickCount()
+            end
+            
+            if gui.GetValue("rbot.antiaim.advanced.autodir.edges") == true  or gui.GetValue("rbot.antiaim.advanced.antialign") == 0 then
+                gui.SetValue("rbot.antiaim.advanced.autodir.edges", false)
+                gui.SetValue("rbot.antiaim.advanced.antialign", 1)
             end
 
             if tick == true then
