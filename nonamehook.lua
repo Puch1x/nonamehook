@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.11"
+local version_number = "2.12"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
