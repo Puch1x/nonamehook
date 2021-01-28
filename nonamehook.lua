@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.10"
+local version_number = "2.11"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -683,7 +683,7 @@ local function chatspam()
                 elseif chatspammerselection:GetValue() == 4 then
                     message = "shut the fuck you stupid bitch ass nigger femboy dipshit asshole fucktard pedophile motherfucker crybaby noname newfagg kys"
                 elseif chatspammerselection:GetValue() == 5 then
-                    message = "AIMWARE.net | Premium CS:GO Cheat"
+                    message = "www.AIMWARE.net | Premium CS:GO Cheat"
                 end
             end
 
