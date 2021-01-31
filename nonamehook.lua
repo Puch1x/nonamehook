@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.13"
+local version_number = "2.20"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -49,6 +49,7 @@ local semiragedmgoverridevalue = gui.Slider(group, "nonamehook.semirageoverridev
 
 
     --rage category--
+local forcebaimkey = gui.Keybox(group, "nonamehook.forcebaimkey", "baim key", nil)
 local experimental = gui.Checkbox(group, "nonamehook.exp", "experimental", 0)
 local expdelay = gui.Slider(group, "nonamehook.expdelay", "delay", 0.5, 0.25, 3, 0.25)
 
@@ -81,26 +82,29 @@ local chatspammercustom = gui.Checkbox(group, "nonamehook.chatspammercustom", "c
 local chatspammertextbox = gui.Editbox(group, "nonamehook.chatspammertextbox", "")
 local chatspammerselection = gui.Combobox(group, "nonamehook.chatspammerselection", "text", "hallal message", "Astolfo > all", "fuck niggers", "fuck the haters", "stfu", "Aimware.net")
 local ragdollcheck = gui.Checkbox(group, "nonamehook.ragdollmanipulation", "ragdoll manipulation", 0)
-local ragdollforce = gui.Slider(group, "nonamehook.ragdollforce", "force", 100, 0, 5000)
+local ragdollforce = gui.Slider(group, "nonamehook.ragdollforce", "force", 2, 0, 10, 0.5)
 local ragdollgravity = gui.Slider(group, "nonamehook.ragdollgravity", "gravity", 600, -1000, 1000, 100)
 local invunlock = gui.Button(group, "Unlock Inventory", Inventoryunlock)
-
---Check if Player is in-game for later use--
-local InGame
-local function isInGame()
-
-    if entities.GetLocalPlayer() ~= nil then
-        InGame = true
-    end
-
-end
-callbacks.Register("Draw", isInGame)
 
 
 --Variables and stuff--
 local screenW, screenH = draw.GetScreenSize()
 local screenWCenter = screenW/2
 local screenHCenter = screenH/2
+local forcingbaim = false
+
+--check if player is in-game for later use--
+local InGame = false
+local function isInGame()
+
+    if entities.GetLocalPlayer() ~= nil then
+        InGame = true
+    else
+        InGame = false
+    end
+
+end
+callbacks.Register("Draw", isInGame)
 
 
 --making the window appear when Aimware's window is opened--
@@ -141,9 +145,11 @@ local function activecheck()
     end
 
     if category:GetValue() == 2 then    --rage
+        forcebaimkey:SetInvisible(false)
         experimental:SetInvisible(false)
         expdelay:SetInvisible(false)
     else
+        forcebaimkey:SetInvisible(true)
         experimental:SetInvisible(true)
         expdelay:SetInvisible(true)
     end
@@ -477,120 +483,123 @@ local function weaponCheck()
 
     if semirage:GetValue() == true then
 
-        local a = entities.GetLocalPlayer():GetWeaponID()
+        if InGame == true then
 
-        if gui.GetValue("rbot.master") == true then
+            local a = entities.GetLocalPlayer():GetWeaponID()
 
-            if a == 4 or a == 61 or a == 63 or a == 2 or a == 3 or a == 32 or a == 36 or a == 30 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.pistol.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.pistol.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.pistol.autowall")
-            elseif a == 1 or a == 64 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.hpistol.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.hpistol.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.hpistol.autowall")
-            elseif a == 17 or a == 26 or a == 19 or a == 24 or a == 23 or a == 34 or a == 33 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.smg.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.smg.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.smg.autowall")
-            elseif a == 7 or a == 8 or a == 10 or a == 13 or a == 60 or a == 16 or a == 39 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.rifle.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.rifle.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.rifle.autowall")
-            elseif a == 35 or a == 27 or a == 25 or a == 29 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.shotgun.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.shotgun.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.shotgun.autowall")
-            elseif a == 40 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.scout.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.scout.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.scout.autowall")
-            elseif a == 11 or a == 38 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.asniper.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.asniper.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.asniper.autowall")
-            elseif a == 9 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.sniper.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.sniper.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.sniper.autowall")
-            elseif a == 28 or a == 13 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.lmg.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.lmg.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.lmg.autowall")
-            elseif a == 31 then
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.zeus.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.zeus.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.zeus.autowall")
-            else
-                rbothitchance = gui.GetValue("rbot.accuracy.weapon.shared.hitchance")
-                rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.shared.mindmg")
-                rbotAWall = gui.GetValue("rbot.hitscan.mode.shared.autowall")
+            if gui.GetValue("rbot.master") == true then
+
+                if a == 4 or a == 61 or a == 63 or a == 2 or a == 3 or a == 32 or a == 36 or a == 30 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.pistol.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.pistol.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.pistol.autowall")
+                elseif a == 1 or a == 64 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.hpistol.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.hpistol.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.hpistol.autowall")
+                elseif a == 17 or a == 26 or a == 19 or a == 24 or a == 23 or a == 34 or a == 33 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.smg.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.smg.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.smg.autowall")
+                elseif a == 7 or a == 8 or a == 10 or a == 13 or a == 60 or a == 16 or a == 39 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.rifle.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.rifle.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.rifle.autowall")
+                elseif a == 35 or a == 27 or a == 25 or a == 29 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.shotgun.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.shotgun.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.shotgun.autowall")
+                elseif a == 40 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.scout.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.scout.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.scout.autowall")
+                elseif a == 11 or a == 38 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.asniper.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.asniper.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.asniper.autowall")
+                elseif a == 9 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.sniper.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.sniper.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.sniper.autowall")
+                elseif a == 28 or a == 13 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.lmg.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.lmg.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.lmg.autowall")
+                elseif a == 31 then
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.zeus.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.zeus.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.zeus.autowall")
+                else
+                    rbothitchance = gui.GetValue("rbot.accuracy.weapon.shared.hitchance")
+                    rbotMinDmg = gui.GetValue("rbot.accuracy.weapon.shared.mindmg")
+                    rbotAWall = gui.GetValue("rbot.hitscan.mode.shared.autowall")
+                end
+
+                if rbotAWall == true then
+                    rbotAWallStatus = "on"
+                else
+                    rbotAWallStatus = "off"
+                end
+
             end
 
-            if rbotAWall == true then
-                rbotAWallStatus = "on"
-            else
-                rbotAWallStatus = "off"
-            end
+            if gui.GetValue("lbot.master") == true then
 
-        end 
+                if a == 4 or a == 61 or a == 63 or a == 2 or a == 3 or a == 32 or a == 36 or a == 30 then
+                    lbotHitchance = gui.GetValue("lbot.trg.pistol.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.pistol.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.pistol.autowall")
+                elseif a == 1 or a == 64 then
+                    lbotHitchance = gui.GetValue("lbot.trg.hpistol.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.hpistol.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.hpistol.autowall")
+                elseif a == 17 or a == 26 or a == 19 or a == 24 or a == 23 or a == 34 or a == 33 then
+                    lbotHitchance = gui.GetValue("lbot.trg.smg.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.smg.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.smg.autowall")
+                elseif a == 7 or a == 8 or a == 10 or a == 13 or a == 60 or a == 16 or a == 39 then
+                    lbotHitchance = gui.GetValue("lbot.trg.rifle.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.rifle.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.rifle.autowall")
+                elseif a == 35 or a == 27 or a == 25 or a == 29 then
+                    lbotHitchance = gui.GetValue("lbot.trg.shotgun.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.shotgun.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.shotgun.autowall")
+                elseif a == 40 then
+                    lbotHitchance = gui.GetValue("lbot.trg.scout.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.scout.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.scout.autowall")
+                elseif a == 11 or a == 38 then
+                    lbotHitchance = gui.GetValue("lbot.trg.asniper.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.asniper.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.asniper.autowall")
+                elseif a == 9 then
+                    lbotHitchance = gui.GetValue("lbot.trg.sniper.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.sniper.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.sniper.autowall")
+                elseif a == 28 or a == 13 then
+                    lbotHitchance = gui.GetValue("lbot.trg.lmg.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.lmg.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.lmg.autowall")
+                elseif a == 31 then
+                    lbotHitchance = gui.GetValue("lbot.trg.zeus.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.zeus.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.zeus.autowall")
+                else
+                    lbotHitchance = gui.GetValue("lbot.trg.shared.hitchance")
+                    lbotMaxFov = gui.GetValue("lbot.weapon.target.shared.maxfov")
+                    lbotAWall = gui.GetValue("lbot.weapon.vis.shared.autowall")
+                end
 
-        if gui.GetValue("lbot.master") == true then
+                if lbotAWall == true then
+                    lbotAWallStatus = "on"
+                else
+                    lbotAWallStatus = "off"
+                end
 
-             if a == 4 or a == 61 or a == 63 or a == 2 or a == 3 or a == 32 or a == 36 or a == 30 then
-                lbotHitchance = gui.GetValue("lbot.trg.pistol.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.pistol.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.pistol.autowall")
-            elseif a == 1 or a == 64 then
-                lbotHitchance = gui.GetValue("lbot.trg.hpistol.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.hpistol.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.hpistol.autowall")
-            elseif a == 17 or a == 26 or a == 19 or a == 24 or a == 23 or a == 34 or a == 33 then
-                lbotHitchance = gui.GetValue("lbot.trg.smg.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.smg.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.smg.autowall")
-            elseif a == 7 or a == 8 or a == 10 or a == 13 or a == 60 or a == 16 or a == 39 then
-                lbotHitchance = gui.GetValue("lbot.trg.rifle.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.rifle.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.rifle.autowall")
-            elseif a == 35 or a == 27 or a == 25 or a == 29 then
-                lbotHitchance = gui.GetValue("lbot.trg.shotgun.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.shotgun.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.shotgun.autowall")
-            elseif a == 40 then
-                lbotHitchance = gui.GetValue("lbot.trg.scout.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.scout.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.scout.autowall")
-            elseif a == 11 or a == 38 then
-                lbotHitchance = gui.GetValue("lbot.trg.asniper.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.asniper.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.asniper.autowall")
-            elseif a == 9 then
-                lbotHitchance = gui.GetValue("lbot.trg.sniper.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.sniper.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.sniper.autowall")
-            elseif a == 28 or a == 13 then
-                lbotHitchance = gui.GetValue("lbot.trg.lmg.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.lmg.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.lmg.autowall")
-            elseif a == 31 then
-                lbotHitchance = gui.GetValue("lbot.trg.zeus.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.zeus.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.zeus.autowall")
-            else
-                lbotHitchance = gui.GetValue("lbot.trg.shared.hitchance")
-                lbotMaxFov = gui.GetValue("lbot.weapon.target.shared.maxfov")
-                lbotAWall = gui.GetValue("lbot.weapon.vis.shared.autowall")
-            end
-
-            if lbotAWall == true then
-                lbotAWallStatus = "on"
-            else
-                lbotAWallStatus = "off"
             end
 
         end
-
     end
 
 end
@@ -641,7 +650,7 @@ if positionX == nil and positionY == nil then
     positionY = screenHCenter
 end
 
-local font = draw.CreateFont( "Agency FB", 20, 100 )
+local font = draw.CreateFont( "Corbel", 18, 90 )
 
 local function semirageindicators()
 
@@ -650,6 +659,7 @@ local function semirageindicators()
         if InGame == true then
 
             if gui.GetValue("lbot.master") == true then
+
                 draw.SetFont(font)
                 draw.Color(255, 255, 255, 255)
                 draw.TextShadow(positionX, positionY+20, "hchance:" )
@@ -667,6 +677,7 @@ local function semirageindicators()
             end
 
             if gui.GetValue("rbot.master") == true then
+
                 draw.SetFont(font)
                 draw.Color(255, 255, 255, 255)
                 draw.TextShadow(positionX, positionY+20, "hchance:" )
@@ -682,10 +693,19 @@ local function semirageindicators()
                 draw.TextShadow(positionX+60, positionY+50, rbotAWallStatus)
 
                 if semirageaa:GetValue() == true then
+
                     draw.Color(255, 255, 255, 255)
                     draw.TextShadow(positionX, positionY+65, "aa side:")
                     draw.Color(semiragecolor:GetValue())
                     draw.TextShadow(positionX+60, positionY+65, side)
+
+                end
+
+                if forcingbaim == true then
+
+                    draw.Color(semiragecolor:GetValue())
+                    draw.TextShadow(positionX, positionY-25, "forcing baim")
+                    
                 end
 
             end
@@ -697,6 +717,123 @@ local function semirageindicators()
 end
 callbacks.Register("Draw", semirageindicators)
 
+
+local sharedforce
+local zeusforce
+local pistolforce
+local hpistolforce
+local smgforce
+local rifleforce
+local shotgunforce
+local scoutforce
+local asniperforce
+local sniperforce
+local lmgforce
+
+local weapons = {shared, zeus, pistol, hpistol, smg, rifle, shotgun, scout, asniper, sniper, lmg}
+local function forcebaim()
+
+    if InGame == true then
+
+        if forcebaimkey:GetValue() ~= 0 then
+
+            if input.IsButtonPressed(forcebaimkey:GetValue()) then
+
+                baimtoggle = not baimtoggle
+
+                if not baimtoggle then
+
+                    sharedforce = gui.GetValue("rbot.hitscan.mode.shared.bodyaim.force")
+                    zeusforce = gui.GetValue("rbot.hitscan.mode.zeus.bodyaim.force")
+                    pistolforce = gui.GetValue("rbot.hitscan.mode.pistol.bodyaim.force")
+                    hpistolforce = gui.GetValue("rbot.hitscan.mode.hpistol.bodyaim.force")
+                    smgforce = gui.GetValue("rbot.hitscan.mode.smg.bodyaim.force")
+                    rifleforce = gui.GetValue("rbot.hitscan.mode.rifle.bodyaim.force")
+                    shotgunforce = gui.GetValue("rbot.hitscan.mode.shotgun.bodyaim.force")
+                    scoutforce = gui.GetValue("rbot.hitscan.mode.scout.bodyaim.force")
+                    asniperforce = gui.GetValue("rbot.hitscan.mode.asniper.bodyaim.force")
+                    sniperforce = gui.GetValue("rbot.hitscan.mode.sniper.bodyaim.force")
+                    lmgforce = gui.GetValue("rbot.hitscan.mode.lmg.bodyaim.force")
+                    scouthit = gui.GetValue("rbot.accuracy.weapon.scout.mindmg")
+
+                    sharedsafe = gui.GetValue("rbot.hitscan.mode.shared.forcesafe.head")
+                    zeussafe = gui.GetValue("rbot.hitscan.mode.zeus.forcesafe.head")
+                    pistolsafe = gui.GetValue("rbot.hitscan.mode.pistol.forcesafe.head")
+                    hpistolsafe = gui.GetValue("rbot.hitscan.mode.hpistol.forcesafe.head")
+                    smgsafe = gui.GetValue("rbot.hitscan.mode.smg.forcesafe.head")
+                    riflesafe = gui.GetValue("rbot.hitscan.mode.rifle.forcesafe.head")
+                    shotgunsafe = gui.GetValue("rbot.hitscan.mode.shotgun.forcesafe.head")
+                    scoutsafe = gui.GetValue("rbot.hitscan.mode.scout.forcesafe.head")
+                    asnipersafe = gui.GetValue("rbot.hitscan.mode.asniper.forcesafe.head")
+                    snipersafe = gui.GetValue("rbot.hitscan.mode.sniper.forcesafe.head")
+
+
+                    gui.SetValue("rbot.hitscan.mode.shared.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.zeus.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.pistol.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.hpistol.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.smg.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.rifle.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.shotgun.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.scout.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.asniper.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.sniper.bodyaim.force", 1)
+                    gui.SetValue("rbot.hitscan.mode.lmg.bodyaim.force", 1)
+                    gui.SetValue("rbot.accuracy.weapon.scout.mindmg", 45)
+                    gui.SetValue("rbot.hitscan.mode.scout.forcesafe.head", 1)
+                    
+                    gui.SetValue("rbot.hitscan.mode.shared.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.zeus.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.pistol.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.hpistol.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.smg.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.rifle.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.shotgun.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.scout.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.asniper.forcesafe.head", 1)
+                    gui.SetValue("rbot.hitscan.mode.sniper.forcesafe.head", 1)
+
+                    forcingbaim = true
+
+                else
+                    
+                    gui.SetValue("rbot.hitscan.mode.shared.bodyaim.force", sharedforce)
+                    gui.SetValue("rbot.hitscan.mode.zeus.bodyaim.force", zeusforce)
+                    gui.SetValue("rbot.hitscan.mode.pistol.bodyaim.force", pistolforce)
+                    gui.SetValue("rbot.hitscan.mode.hpistol.bodyaim.force", hpistolforce)
+                    gui.SetValue("rbot.hitscan.mode.smg.bodyaim.force", smgforce)
+                    gui.SetValue("rbot.hitscan.mode.rifle.bodyaim.force", rifleforce)
+                    gui.SetValue("rbot.hitscan.mode.shotgun.bodyaim.force", shotgunforce)
+                    gui.SetValue("rbot.hitscan.mode.scout.bodyaim.force", scoutforce)
+                    gui.SetValue("rbot.hitscan.mode.asniper.bodyaim.force", asniperforce)
+                    gui.SetValue("rbot.hitscan.mode.sniper.bodyaim.force", sniperforce)
+                    gui.SetValue("rbot.hitscan.mode.lmg.bodyaim.force", lmgforce)
+                    gui.SetValue("rbot.accuracy.weapon.scout.mindmg", scouthit)
+                    gui.SetValue("rbot.hitscan.mode.scout.forcesafe.head", scoutsafe)
+
+                    gui.SetValue("rbot.hitscan.mode.shared.forcesafe.head", sharedsafe)
+                    gui.SetValue("rbot.hitscan.mode.zeus.forcesafe.head", zeussafe)
+                    gui.SetValue("rbot.hitscan.mode.pistol.forcesafe.head", pistolsafe)
+                    gui.SetValue("rbot.hitscan.mode.hpistol.forcesafe.head", hpistolsafe)
+                    gui.SetValue("rbot.hitscan.mode.smg.forcesafe.head", smgsafe)
+                    gui.SetValue("rbot.hitscan.mode.rifle.forcesafe.head", riflesafe)
+                    gui.SetValue("rbot.hitscan.mode.shotgun.forcesafe.head", shotgunsafe)
+                    gui.SetValue("rbot.hitscan.mode.scout.forcesafe.head", scoutsafe)
+                    gui.SetValue("rbot.hitscan.mode.asniper.forcesafe.head", asnipersafe)
+                    gui.SetValue("rbot.hitscan.mode.sniper.forcesafe.head", snipersafe)
+
+                    forcingbaim = false
+
+                end
+
+            end 
+
+        end
+
+    end
+
+end
+callbacks.Register("Draw", forcebaim)
 
 local timing = false
 local lasttiming = 0
@@ -755,7 +892,7 @@ local function ragdollmanipulation()
             if ragdollforce:GetValue() ~= client.GetConVar("phys_pushscale") then
                 client.SetConVar("phys_pushscale", ragdollforce:GetValue(), true)
             end
-            
+
             if ragdollgravity:GetValue() ~= client.GetConVar("cl_ragdoll_gravity") then
                 client.SetConVar("cl_ragdoll_gravity", ragdollgravity:GetValue(), true)
             end
