@@ -14,3 +14,8 @@
 
 2.13 (12:00 | 28.01.2021)
     -adjusted experimental feature
+
+2.20 (01:30 | 31.01.2021)
+    -fixed semirage indicators not working due to missing font
+    -changed expermental feature to not force "micromovement" in "anti alignment" settings
+    -added force baim (still headshots sometimes due to min dmg)
