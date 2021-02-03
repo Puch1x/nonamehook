@@ -19,3 +19,7 @@
     -fixed semirage indicators not working due to missing font
     -changed expermental feature to not force "micromovement" in "anti alignment" settings
     -added force baim (still headshots sometimes due to min dmg)
+
+2.30 (09:50 | 03.02.2021)
+    -added revolver fix (fixes most dumps)
+    -added dt fix (enables dt on auto)
