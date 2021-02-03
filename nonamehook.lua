@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.20"
+local version_number = "2.30"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -52,6 +52,8 @@ local semiragedmgoverridevalue = gui.Slider(group, "nonamehook.semirageoverridev
 local forcebaimkey = gui.Keybox(group, "nonamehook.forcebaimkey", "baim key", nil)
 local experimental = gui.Checkbox(group, "nonamehook.exp", "experimental", 0)
 local expdelay = gui.Slider(group, "nonamehook.expdelay", "delay", 0.5, 0.25, 3, 0.25)
+local revolverfix = gui.Checkbox(group, "nonamehook.revolverfix", "revolver fix", 1)
+local doubletapfix = gui.Checkbox(group, "nonamehook.doubletapfix", "auto dt", 0)
 
 
     --viewmodel changer--
@@ -148,10 +150,14 @@ local function activecheck()
         forcebaimkey:SetInvisible(false)
         experimental:SetInvisible(false)
         expdelay:SetInvisible(false)
+        revolverfix:SetInvisible(false)
+        doubletapfix:SetInvisible(false)
     else
         forcebaimkey:SetInvisible(true)
         experimental:SetInvisible(true)
         expdelay:SetInvisible(true)
+        revolverfix:SetInvisible(true)
+        doubletapfix:SetInvisible(true)
     end
 
     if category:GetValue() == 3 then    --viewmodel changer
@@ -914,3 +920,50 @@ local function Inventoryunlock()
     ]])
 
 end
+
+
+local paused = false
+local stopped = false
+local function hvhfixes()
+
+    if InGame == true then
+
+        local weapon = entities.GetLocalPlayer():GetWeaponID()
+
+        if revolverfix:GetValue() == true then
+
+            if gui.GetValue("rbot.aim.automation.revolver") == true and gui.GetValue("misc.fakelag.enable") == true or stopped == true then
+
+                if weapon == 64 then
+                    gui.SetValue("misc.fakelag.enable", 0)
+                    stopped = true
+                else
+                    gui.SetValue("misc.fakelag.enable", 1)
+                    stopped = false
+                end
+
+            end
+
+        end
+
+        if doubletapfix:GetValue() == true then
+
+            if gui.GetValue("rbot.accuracy.weapon.asniper.doublefire") ~= 0 and gui.GetValue("misc.fakelag.enable") == true or paused == true then
+
+                if weapon == 11 or weapon == 38 then
+                    gui.SetValue("rbot.accuracy.weapon.asniper.doublefire", 2)
+                    paused = true
+                else
+                    gui.SetValue("rbot.accuracy.weapon.asniper.doublefire", 0)
+                    pause = false
+                end
+
+            end
+
+        end
+
+    end
+
+end
+callbacks.Register("Draw", hvhfixes)
+
