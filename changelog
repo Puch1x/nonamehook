@@ -23,3 +23,6 @@
 2.30 (09:50 | 03.02.2021)
     -added revolver fix (fixes most dumps)
     -added dt fix (enables dt on auto)
+
+2.31 (22:00 | 04.02.2021)
+    -final fix for chatspammer and experimental features not updating
