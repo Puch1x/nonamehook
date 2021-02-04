@@ -7,7 +7,7 @@ print("XX  XXX XX  XXX XX   XX")
 print("XX   XX XX   XX XX   XX")
 
 local dont_update = false
-local version_number = "2.30"
+local version_number = "2.31"
 local updated = false
 local github_ver_num = http.Get("https://raw.githubusercontent.com/Puch1x/nonamehook/main/version?token=AOFTWAT4QAEPJLJL4NFFCJLABMOGU")
 
@@ -77,6 +77,7 @@ local foghdrcolor = gui.Slider(group, "nonamehook.foghdrcolor", "hdr color scale
 
 
     --misc stuff--
+local disconnect = gui.Button(group, "disconnect", discon)
 local engineradarcheck = gui.Checkbox(group, "nonamehook.engineradar", "engine radar", 0)
 local chatspammer = gui.Checkbox(group, "nonamehook.chatspammer", "chat spammer", 0)
 local chatspammerdelay = gui.Slider(group, "nonamehook.chatspammerdelay","delay", 1, 1, 5, 0.25)
@@ -201,6 +202,7 @@ local function activecheck()
         chatspammer:SetInvisible(false)
         chatspammerdelay:SetInvisible(false)
         chatspammercustom:SetInvisible(false)
+        disconnect:SetInvisible(false)
         if chatspammercustom:GetValue() == true then
             chatspammerselection:SetInvisible(true)
             chatspammertextbox:SetInvisible(false)
@@ -223,10 +225,16 @@ local function activecheck()
         ragdollcheck:SetInvisible(true)
         ragdollforce:SetInvisible(true)
         ragdollgravity:SetInvisible(true)
+        disconnect:SetInvisible(true)
     end
 
 end
 callbacks.Register("Draw", activecheck)
+
+
+local function discon()
+    client.Command("disconnect", true)
+end
 
 
 local function legitfunctions()
@@ -438,9 +446,8 @@ local function exp()
                 lasttick = globals.TickCount()
             end
             
-            if gui.GetValue("rbot.antiaim.advanced.autodir.edges") == true  or gui.GetValue("rbot.antiaim.advanced.antialign") == 0 then
+            if gui.GetValue("rbot.antiaim.advanced.autodir.edges") == true then
                 gui.SetValue("rbot.antiaim.advanced.autodir.edges", false)
-                gui.SetValue("rbot.antiaim.advanced.antialign", 1)
             end
 
             if tick == true then
@@ -449,6 +456,8 @@ local function exp()
                 tick = false
             end
 
+        else
+            lasttick = 0
         end
         
     end
@@ -882,7 +891,11 @@ local function chatspam()
                 timing = false
             end
         
+        else
+            lasttiming = 0
         end
+
+
     end
 
 end
@@ -896,11 +909,11 @@ local function ragdollmanipulation()
         if InGame == true then
             
             if ragdollforce:GetValue() ~= client.GetConVar("phys_pushscale") then
-                client.SetConVar("phys_pushscale", ragdollforce:GetValue(), true)
+                client.SetConVar("phys_pushscale", ragdollforce:GetValue(), false)
             end
 
             if ragdollgravity:GetValue() ~= client.GetConVar("cl_ragdoll_gravity") then
-                client.SetConVar("cl_ragdoll_gravity", ragdollgravity:GetValue(), true)
+                client.SetConVar("cl_ragdoll_gravity", ragdollgravity:GetValue(), false)
             end
 
         end
